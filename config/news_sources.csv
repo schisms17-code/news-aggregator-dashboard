@@ -1,0 +1,17 @@
+"source_name","region","category","feed_url","active"
+"KSAT Local","San Antonio","Local Government","https://www.ksat.com/arc/outboundfeeds/rss/category/news/local/?outputType=xml&size=10",TRUE
+"KSAT Politics","San Antonio","Politics","https://www.ksat.com/arc/outboundfeeds/rss/category/news/politics/?outputType=xml&size=10",TRUE
+"KSAT Crime","San Antonio","Crime & Public Safety","https://www.ksat.com/arc/outboundfeeds/rss/tags_slug/crime/?outputType=xml&size=10",TRUE
+"KSAT Money","San Antonio","Business & Economy","https://www.ksat.com/arc/outboundfeeds/rss/category/money/?outputType=xml&size=10",TRUE
+"Texas Tribune","Texas","Politics","https://feeds.texastribune.org/feeds/main/",TRUE
+"Google News San Antonio Government","San Antonio","Local Government","https://news.google.com/rss/search?q=%22San%20Antonio%22%20government%20OR%20city%20council%20OR%20mayor&hl=en-US&gl=US&ceid=US:en",TRUE
+"Google News San Antonio Crime","San Antonio","Crime & Public Safety","https://news.google.com/rss/search?q=%22San%20Antonio%22%20crime%20OR%20police%20OR%20public%20safety&hl=en-US&gl=US&ceid=US:en",TRUE
+"Google News Texas Politics","Texas","Politics","https://news.google.com/rss/search?q=Texas%20politics%20OR%20Texas%20legislature%20OR%20Texas%20government&hl=en-US&gl=US&ceid=US:en",TRUE
+"Google News US Business","National","Business & Economy","https://news.google.com/rss/search?q=United%20States%20business%20OR%20economy%20OR%20employment&hl=en-US&gl=US&ceid=US:en",TRUE
+"Google News US Technology","National","Technology","https://news.google.com/rss/search?q=United%20States%20technology%20OR%20artificial%20intelligence&hl=en-US&gl=US&ceid=US:en",TRUE
+"Google News US Public Health","National","Public Health","https://news.google.com/rss/search?q=%22public%20health%22%20OR%20healthcare%20OR%20CDC&hl=en-US&gl=US&ceid=US:en",TRUE
+"Google News US Education","National","Education","https://news.google.com/rss/search?q=education%20OR%20schools%20OR%20universities&hl=en-US&gl=US&ceid=US:en",TRUE
+"Google News International Politics","International","Politics","https://news.google.com/rss/search?q=international%20politics%20OR%20world%20government&hl=en-US&gl=US&ceid=US:en",TRUE
+"Google News International Business","International","Business & Economy","https://news.google.com/rss/search?q=international%20business%20OR%20global%20economy&hl=en-US&gl=US&ceid=US:en",TRUE
+"Google News International Health","International","Public Health","https://news.google.com/rss/search?q=international%20public%20health%20OR%20global%20health&hl=en-US&gl=US&ceid=US:en",TRUE
+"Google News International Technology","International","Technology","https://news.google.com/rss/search?q=international%20technology%20OR%20science&hl=en-US&gl=US&ceid=US:en",TRUE

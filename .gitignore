@@ -1,0 +1,63 @@
+# R / RStudio session state
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+.Renviron
+.Rprofile.local
+
+# Collected news and generated outputs (keep folders using .gitkeep if needed)
+data/raw/
+data/archive/
+data/processed/
+logs/
+
+# Machine-specific and transient artifacts
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
+
+# Local working copies and packaged historical releases
+run_news_collection_before_retention.R
+run_news_collection_v*_backup.R
+dashboard/app_v*_backup*.R
+dashboard/news_aggregator_dashboard_2_0/
+dashboard/news_aggregator_dashboard_2_0_SYNTAX_FIXED/
+dashboard/news_aggregator_dashboard_3_0/
+dashboard/news_archive_upgrade/
+dashboard/*.zip
+news_aggregator_hourly_automation/
+news_aggregator_hourly_automation.zip
+
+# Nested unrelated repository / workspace (review before removing locally)
+TTUI/
+
+# Downloaded documentation package
+/news_aggregator_github_docs.zip
+/news_aggregator_github_docs/
+
+# Duplicate root documentation
+/DATA_DICTIONARY.md
+/DEPENDENCIES.md
+/METHODOLOGY.md
+
+# RStudio local project files
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+/TTUI.Rproj
+
+# Legacy application folder (review before publishing)
+/app.R/
+
+# Archive backups
+/data/processed/news_articles_archive_backup_*.rds
+
+# Local scheduler logs
+/logs/
+
+# Separate legacy project
+/TTUI/
