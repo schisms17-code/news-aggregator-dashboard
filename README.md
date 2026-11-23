@@ -12,6 +12,20 @@ The dashboard is designed for desktop and tablet use, including iPad Safari. It 
 
 ## Live dashboard
 
+## Dashboard Preview
+
+### Home Dashboard
+![News Aggregator Home](docs/screenshots/01_home.png)
+
+### News Analytics
+![News Analytics](docs/screenshots/02_news_analytics.png)
+
+### Trending Topics
+![Trending Topics](docs/screenshots/03_trending_topics.png)
+
+### Historical Archive
+![Archive Explorer](docs/screenshots/04_archive_explorer.png)
+
 **[Open News Intelligence Aggregator 3.0](https://hydrocodex.shinyapps.io/news-aggregator-dashboard/)**
 
 The hosted dashboard serves the **most recently deployed dataset**. Refreshing the browser does **not** trigger RSS collection. New articles appear after the separate collection and cloud-publishing workflow completes successfully.
