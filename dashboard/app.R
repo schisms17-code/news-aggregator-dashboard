@@ -136,21 +136,78 @@ article_card <- function(x) {
     tags$div(class='meta', fmt_date(x$published_at[1])))
 }
 css <- '
-body {background:#f3f6fa; color:#20334b; font-family:system-ui,"Segoe UI",sans-serif;}
-.navbar {background:#153451!important; border:0; border-radius:0;}
+/* News Aggregator 3.0 — tablet/mobile responsive layer */
+* {box-sizing:border-box;}
+html {-webkit-text-size-adjust:100%;}
+body {background:#f3f6fa;color:#20334b;font-family:system-ui,"Segoe UI",sans-serif;overflow-x:hidden;}
+.navbar {background:#153451!important;border:0;border-radius:0;}
 .navbar-default .navbar-brand,.navbar-default .navbar-nav>li>a {color:white!important;}
-.navbar-default .navbar-nav>.active>a {background:#285579!important; color:white!important;}
+.navbar-default .navbar-nav>.active>a {background:#285579!important;color:white!important;}
+.navbar-default .navbar-toggle {border-color:#aac3d6;}
+.navbar-default .navbar-toggle .icon-bar {background-color:white;}
 .container-fluid {max-width:1500px;}
-.page-head {margin:25px 0 18px;} .page-head h2 {font-weight:750;color:#153451;}
+.tab-content {min-width:0;}
+.page-head {margin:25px 0 18px;}
+.page-head h2 {font-weight:750;color:#153451;line-height:1.2;overflow-wrap:anywhere;}
 .page-head p,.meta {color:#667b91;}
 .metrics {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:18px 0 22px;}
-.metric,.panel,.article {background:white;border:1px solid #e1e8ef;border-radius:12px;padding:18px;margin-bottom:14px;}
-.metric-label {font-size:13px;color:#667b91;} .metric-value {font-size:29px;font-weight:750;color:#173d63;}
-.panel h3 {font-size:19px;color:#173d63;margin-top:0;} .article h4 {line-height:1.4;font-weight:700;}
-.article p {color:#46596c;} .meta {font-size:12px;} .note {color:#65778a;font-size:13px;}
-@media(max-width:950px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr));}}
-@media(max-width:550px){.metrics{grid-template-columns:1fr;}}
+.metric,.panel,.article {background:white;border:1px solid #e1e8ef;border-radius:12px;padding:18px;margin-bottom:14px;min-width:0;}
+.metric-label {font-size:13px;color:#667b91;}
+.metric-value {font-size:29px;font-weight:750;color:#173d63;overflow-wrap:anywhere;}
+.panel h3 {font-size:19px;color:#173d63;margin-top:0;}
+.article h4 {line-height:1.4;font-weight:700;overflow-wrap:anywhere;}
+.article h4 a {display:inline-block;padding:3px 0;overflow-wrap:anywhere;}
+.article p {color:#46596c;overflow-wrap:anywhere;}
+.meta {font-size:12px;overflow-wrap:anywhere;}
+.note {color:#65778a;font-size:13px;}
+.panel .shiny-plot-output {max-width:100%;}
+.panel .table {width:100%;}
+.panel .shiny-html-output:has(> table) {overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.panel table {font-size:13px;}
+.panel table th,.panel table td {overflow-wrap:break-word;vertical-align:top;}
+.panel .form-control {max-width:100%;}
+.panel .shiny-input-container {max-width:100%;}
+.panel .selectize-control {max-width:100%;}
+.panel .input-daterange {display:flex;flex-wrap:wrap;gap:6px;}
+.panel .input-daterange input {min-width:110px;}
+.panel .btn {min-height:44px;margin:3px 5px 7px 0;white-space:normal;}
+.panel .shiny-download-link {display:inline-flex;align-items:center;justify-content:center;}
+.panel code {overflow-wrap:anywhere;white-space:normal;}
+/* Many navigation tabs: horizontally scrollable at tablet widths. */
+@media (min-width:768px) {
+ .navbar .container-fluid {display:flex;align-items:center;flex-wrap:wrap;}
+ .navbar .navbar-header {flex:0 0 auto;}
+ .navbar .navbar-collapse {flex:1 1 100%;padding:0;overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch;}
+ .navbar .navbar-nav {display:flex;float:none;flex-wrap:nowrap;margin:0;}
+ .navbar .navbar-nav>li {float:none;flex:0 0 auto;}
+ .navbar .navbar-nav>li>a {white-space:nowrap;padding:13px 15px;min-height:44px;}
+}
+@media (max-width:1024px) {
+ .metrics {grid-template-columns:repeat(2,minmax(0,1fr));}
+ .container-fluid {padding-left:16px;padding-right:16px;}
+ /* Stack side-by-side charts on iPad portrait and smaller screens. */
+ .tab-content > .tab-pane > .row > .col-sm-6 {width:100%;float:none;}
+ .panel {padding:16px;}
+}
+@media (max-width:767px) {
+ .navbar .navbar-collapse {max-height:70vh;overflow-y:auto;}
+ .navbar .navbar-nav>li>a {min-height:44px;padding:12px 18px;}
+ .tab-content .row > [class*="col-sm-"] {width:100%;float:none;}
+ .container-fluid {padding-left:12px;padding-right:12px;}
+ .page-head {margin:18px 0 12px;}
+ .page-head h2 {font-size:24px;}
+ .metric,.panel,.article {padding:14px;margin-bottom:12px;}
+ .panel .btn {margin-bottom:9px;}
+ .panel .table {min-width:540px;}
+ .panel .shiny-html-output:has(> table) {overflow-x:auto;}
+}
+@media (max-width:480px) {
+ .metrics {grid-template-columns:1fr;gap:9px;}
+ .metric-value {font-size:26px;}
+ .panel h3 {font-size:18px;}
+}
 '
+
 header <- function(title, subtitle) tags$div(class='page-head', tags$h2(title), tags$p(subtitle))
 plot_theme <- function() theme_minimal(base_size=12) + theme(panel.grid.minor=element_blank(), axis.title.y=element_blank())
 bar_plot <- function(x, col, top=15) {
@@ -162,8 +219,8 @@ bar_plot <- function(x, col, top=15) {
     labs(x=NULL,y='Articles') + plot_theme()
 }
 
-ui <- navbarPage('NEWS AGGREGATOR 3.0', id='nav', header=tags$head(tags$style(htmltools::HTML(css))),
-  tabPanel('Home', header('News Intelligence Dashboard','Live view of the latest locally saved RSS snapshot'),
+ui <- navbarPage('NEWS AGGREGATOR 3.0', id='nav', header=tags$head(tags$meta(name='viewport', content='width=device-width, initial-scale=1'), tags$style(htmltools::HTML(css))),
+  tabPanel('Home', header('News Intelligence Dashboard','Latest published RSS snapshot; updates after scheduled cloud publishing'),
     uiOutput('metrics'), div(class='panel',h3('Latest headlines'),uiOutput('latest')),
     div(class='panel',h3('Top trending keywords'),plotOutput('home_trends',height='310px'))),
   tabPanel('Explore News', header('Explore News','Search and filter saved articles'),
@@ -225,7 +282,7 @@ ui <- navbarPage('NEWS AGGREGATOR 3.0', id='nav', header=tags$head(tags$style(ht
   tabPanel('About',header('About the Project','Collection, methodology and refresh behavior'),
     div(class='panel',h3('Latest snapshot'),tags$code(data_path),h3('Historical archive'),tags$code(archive_path),
         p('The dashboard checks the saved dataset every 60 seconds and reloads it when the file changes.'),
-        p('Refreshing the dashboard does not collect RSS feeds. Run the collector manually or schedule it separately.'),
+        p('The cloud dashboard displays the most recently deployed dataset. RSS collection and scheduled publishing run separately on the configured Windows computer; refreshing this page does not initiate collection.'),
         h3('Methods'),p('Trending keywords are counted by unique article title. Similar stories use Jaccard overlap of normalized title words; this is an approximate screening method.'),
         p('RSS feed coverage is selective. Counts describe collected feed items, not all published news.'),
         h3('Loaded snapshot'),textOutput('snapshot_status')))

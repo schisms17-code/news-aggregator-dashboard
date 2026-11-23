@@ -61,3 +61,46 @@ TTUI/
 
 # Separate legacy project
 /TTUI/
+
+# ============================================================
+# NEWS AGGREGATOR 3.0 - LOCAL AND DEPLOYMENT EXCLUSIONS
+# ============================================================
+
+# Generated deployment bundles and backups
+deployment/
+dashboard/app_backup.R
+dashboard/*_backup.R
+
+# Local datasets and processing outputs
+data/raw/
+data/processed/
+data/archive/
+
+# Runtime logs
+logs/
+*.log
+
+# Secrets and local environment settings
+.Renviron
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# RStudio local state
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*~
+.gitignore.backup
+README_old.md

@@ -1,100 +1,161 @@
-# News Aggregator Dashboard 3.0
+# News Intelligence Aggregator 3.0
 
-**Automated RSS collection, historical archiving, and interactive news analytics in R**
+**An R-based news monitoring, historical archiving, and analytics dashboard with automated cloud publishing.**
+
+[**Launch the live dashboard**](https://hydrocodex.shinyapps.io/news-aggregator-dashboard/) · [**View the source repository**](https://github.com/schisms17-code/news-aggregator-dashboard)
 
 ## Overview
 
-This project collects publicly available RSS news metadata across San Antonio, Texas, the United States, and international topics. An R-based pipeline stores timestamped collection snapshots, rebuilds a deduplicated historical archive, repairs missing publication timestamps, and supports exploration in an interactive Shiny dashboard.
+News Intelligence Aggregator 3.0 collects articles from configured RSS feeds, processes them into structured datasets, maintains a historical archive, and presents the results in an interactive **R Shiny** dashboard. A scheduled workflow on a configured Windows computer collects and prepares updates, then publishes the latest dataset to **shinyapps.io**.
 
-The project demonstrates data ingestion, repeatable ETL, data-quality checks, scheduled execution, and analytical application development.
+The dashboard is designed for desktop and tablet use, including iPad Safari. It provides a transparent view of collected news rather than a claim to represent all published news.
+
+## Live dashboard
+
+**[Open News Intelligence Aggregator 3.0](https://hydrocodex.shinyapps.io/news-aggregator-dashboard/)**
+
+The hosted dashboard serves the **most recently deployed dataset**. Refreshing the browser does **not** trigger RSS collection. New articles appear after the separate collection and cloud-publishing workflow completes successfully.
 
 ## Features
 
-- RSS ingestion from 16 configured news feeds (see `config/news_sources.csv`).
-- Local hourly scheduling through Windows Task Scheduler and `run_news_collection.bat`.
-- Timestamped RDS snapshots and latest-collection RDS/CSV outputs.
-- Historical archive deduplicated using article identifiers, with `first_seen`, `last_seen`, and `snapshots_seen` metadata.
-- Publication-date recovery from raw RSS date strings.
-- Automated retention of the 10 most recent archive-repair backups.
-- Per-feed collection logs and scheduler execution logs.
-- Interactive dashboard with 10 tabs: Home, Explore News, News Analytics, Trending Topics, Similar Stories, News Monitor, Historical Trends, Article Persistence, Archive Explorer, and About.
+- **RSS ingestion:** Collect articles from configurable news feeds.
+- **Structured processing:** Prepare article records for exploration and analysis.
+- **Historical archiving:** Preserve accumulated articles alongside the latest snapshot.
+- **Interactive exploration:** Search, filter, and inspect collected articles.
+- **News analytics:** Explore patterns and distributions within the collected data.
+- **Trending topics:** Count normalized keywords across unique article titles.
+- **Similar stories:** Surface potentially related headlines using Jaccard overlap of normalized title words; matches are approximate, not semantic verification.
+- **Monitoring and history:** Inspect trends, persistence, and archived records.
+- **Automated publishing:** Use a scheduled Windows workflow to collect data and redeploy the cloud application.
+- **Responsive design:** Support smaller screens and touch navigation, including iPad.
+
+### Dashboard sections
+
+| Section | Purpose |
+| --- | --- |
+| Home | Overview metrics, recent headlines, and trending keywords |
+| Explore News | Search and filter collected articles |
+| News Analytics | Examine distributions and article patterns |
+| Trending Topics | Explore frequently occurring headline terms |
+| Similar Stories | Screen for overlapping headline language |
+| News Monitor | Monitor the collected news snapshot |
+| Historical Trends | Explore patterns across saved history |
+| Article Persistence | Examine recurring article/topic signals |
+| Archive Explorer | Browse historical article records |
+| About | Review methods, data sources, and refresh behavior |
 
 ## Architecture
 
 ```text
-RSS feeds (config/news_sources.csv)
-            |
-            v
-R/01_collect_news.R
-            |--> data/raw/news_snapshot_*.rds
-            |--> data/processed/news_articles_latest.{rds,csv}
-            |--> logs/feed_log_*.csv
-            v
-R/02_build_news_archive.R
-            |--> data/processed/news_articles_archive.{rds,csv}
-            v
-R/03_repair_archive_dates.R
-            |--> date repair + timestamped archive backup
-            v
-run_news_collection.R
-            |--> validations + backup retention + scheduler logs
-            v
-dashboard/app.R (Shiny)
+Configured RSS feeds
+        |
+        v
+R collection and processing scripts
+        |
+        +--> Latest article snapshot (.rds)
+        |
+        +--> Historical article archive (.rds)
+                    |
+                    v
+           R Shiny dashboard
+                    |
+           Scheduled cloud publish
+                    |
+                    v
+              shinyapps.io
+                    |
+             Browser / iPad
 ```
 
-The scheduler wrapper orchestrates collection, archive rebuilding, repair, and validation. The Shiny dashboard reads locally stored processed files; the app is **not** automatically hosted online.
+The data pipeline and hosted dashboard are separate components. Local scheduling and publishing require a configured Windows computer, working network access, and valid deployment authorization.
 
-## Getting started
+## Technology
 
-1. Install R and RStudio.
-2. Install the packages required by the project (see `R/00_packages.R` and `docs/DEPENDENCIES.md`).
-3. From RStudio, set the working directory to the cloned repository.
-4. Run the collector once to generate local data, or provide valid existing processed data files.
-5. Launch the dashboard:
+- **R** for collection, transformation, and analysis
+- **Shiny** for the interactive web application
+- **RSS** as the article ingestion format
+- **RDS** files for processed snapshots and historical records
+- **Windows Task Scheduler** for scheduled execution
+- **rsconnect / shinyapps.io** for cloud deployment
+- **Git and GitHub** for version control and portfolio documentation
 
-```r
-setwd("PATH/TO/news_aggregator")
-source("R/00_packages.R")
-source("R/01_collect_news.R")
-collect_all_news()
-source("R/02_build_news_archive.R")
-build_news_archive(project_dir = getwd())
-source("R/03_repair_archive_dates.R")
-repair_archive_dates()
-shiny::runApp("dashboard", launch.browser = TRUE)
+See [dependencies](docs/DEPENDENCIES.md) for the project's package details.
+
+## Repository guide
+
+```text
+news-aggregator-dashboard/
+├── R/                                  # Collection, cleaning, archive, and publishing scripts
+├── config/                             # News sources and category configuration
+├── dashboard/
+│   └── app.R                           # Shiny dashboard
+├── docs/
+│   ├── DATA_DICTIONARY.md
+│   ├── DEPENDENCIES.md
+│   └── METHODOLOGY.md
+├── scripts/                             # Supporting setup/collection scripts
+├── initialize_project.R
+├── run_news_collection.R
+├── run_news_collection.bat
+├── run_news_collection_and_publish.bat  # Local scheduled workflow entry point
+└── README.md
 ```
 
-**Windows scheduler note:** The included `run_news_collection.R` and `.bat` contain machine-specific paths. Update them for your computer before enabling Task Scheduler. Do not run multiple collectors concurrently.
+The local `deployment/` directory, runtime logs, backups, and generated datasets are intentionally excluded from Git. The repository documents the code and workflow without requiring historical article data to be committed.
 
-**Data note:** Collected article metadata is stored locally and is excluded from the recommended public repository configuration. The app requires generated processed data to run.
+## Getting started locally
 
-## Data model and methodology
+**Prerequisites:** R, RStudio (recommended), the packages required by the scripts, internet access for RSS collection, and a local project directory.
 
-See [Data dictionary](docs/DATA_DICTIONARY.md) and [Methodology](docs/METHODOLOGY.md) for field definitions, deduplication, date handling, and limitations.
+1. Clone the repository:
 
-## Quality checks
+   ```bash
+   git clone https://github.com/schisms17-code/news-aggregator-dashboard.git
+   cd news-aggregator-dashboard
+   ```
 
-The scheduled wrapper verifies that the latest dataset is updated, the archive is nonempty, repaired archive row counts remain unchanged, and article keys are unique. It logs any remaining missing publication dates. Retention cleanup is attempted after the main pipeline completes.
+2. Review `config/news_sources.csv`, `config/news_categories.csv`, and [dependency documentation](docs/DEPENDENCIES.md).
 
-**Verified local example (November 21, 2026, 9:31 AM scheduled run):** 12 snapshots loaded, 10,239 snapshot rows, 1,817 unique archived articles, 265 historical publication dates recovered, zero remaining missing publication dates, and `Collection succeeded.` in the log. These are a historical run's results, not live dashboard counts.
+3. In RStudio, open the project directory and run the collection workflow to create the required local data files. The project includes `run_news_collection.R` and supporting scripts under `R/` and `scripts/`. Confirm the expected input/output paths before running, as the dashboard requires generated datasets that are not stored in Git.
 
-## Limitations
+4. Once the latest and archive RDS files exist in the expected locations, launch the dashboard from the **RStudio Console**:
 
-- RSS coverage is selective and dependent on publisher feed availability, feed ordering, and syndication.
-- Publication dates reflect feed metadata; they are not independently fact-checked.
-- Deduplication depends on article identifiers/URLs and may not merge every syndicated or rewritten story.
-- `snapshots_seen` measures appearances in collected snapshots, not readership or article popularity.
-- Local Task Scheduler only runs while the configured Windows environment permits execution.
-- Hosted deployment requires a plan to supply and refresh processed datasets; local hourly updates do not automatically sync to a remote server.
+   ```r
+   shiny::runApp("dashboard", launch.browser = TRUE)
+   ```
 
-## Responsible use
+**Note:** The public hosted dashboard is the easiest way to explore the application without configuring the local collection pipeline.
 
-This project analyzes RSS article metadata and links to publishers; it does not claim ownership of third-party news content. Check publisher terms and attribution requirements before redistributing collected records.
+## Automated collection and deployment
+
+The Windows-based workflow uses `run_news_collection_and_publish.bat` and R publishing scripts under `R/`. On the configured computer, a scheduled task can collect and process RSS articles, synchronize the deployment dataset, and publish the Shiny app to shinyapps.io.
+
+Cloud deployment requires an authorized `rsconnect` account configured locally. **Do not commit tokens, passwords, account secrets, generated deployment bundles, or local credential files.** Review the scripts and `git status` before publishing repository changes.
+
+## Analytical methods and limitations
+
+- **Source coverage:** Results reflect the configured RSS feeds and successfully collected items, not the full universe of news coverage.
+- **Trending terms:** Keywords are counted using unique article titles, so results are indicators of headline frequency rather than measured public interest.
+- **Similar-story screening:** Jaccard overlap of normalized title words can surface related headlines but may miss paraphrases or produce false positives.
+- **Refresh timing:** The hosted app reflects the most recently published snapshot; scheduled updates depend on the local collector, network, and deployment succeeding.
+- **Interpretation:** News counts and keyword patterns are descriptive and should not be treated as causal evidence or independent fact-checking.
+
+See [methodology](docs/METHODOLOGY.md) and [data dictionary](docs/DATA_DICTIONARY.md) for further detail.
+
+## Portfolio skills demonstrated
+
+**Data engineering:** RSS ingestion, data preparation, repeatable file-based workflows, and historical archiving.
+
+**Analytics:** Descriptive summaries, text normalization, keyword frequency analysis, and similarity screening.
+
+**Application development:** Interactive Shiny dashboard, responsive UI, and user-focused exploration tools.
+
+**Operations:** Windows task automation, deployment validation, cloud publishing, and Git-based version control.
 
 ## Project status
 
-Local data collection, hourly scheduler repetition, archive building, date recovery, and dashboard functionality have been tested. Backup retention passed a dry-run test; automatic execution of retention awaits confirmation in a subsequent scheduler log. Online hosting has not yet been configured.
+**Version:** 3.0 — deployed, with an iPad-compatible interface and a configured scheduled collection/publishing workflow. Actual freshness depends on the latest successful scheduled run.
 
-## Author
+**Live app:** https://hydrocodex.shinyapps.io/news-aggregator-dashboard/
 
-Michael Serna
+**Source:** https://github.com/schisms17-code/news-aggregator-dashboard
